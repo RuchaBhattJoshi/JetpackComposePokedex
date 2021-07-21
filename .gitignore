@@ -1,0 +1,14 @@
+*.iml
+.gradle
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+.idea/
+caches/
+daemon/
+kotlin-profile/
+native/
+wrapper/
