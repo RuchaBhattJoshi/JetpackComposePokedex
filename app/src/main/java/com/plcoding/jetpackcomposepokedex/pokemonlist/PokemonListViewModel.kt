@@ -22,47 +22,44 @@ import javax.inject.Inject
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
     private val repository: PokemonRepository
-): ViewModel() {
+) : ViewModel() {
 
     private var curPage = 0
     var pokemonList = mutableStateOf<List<PokedexListEntry>>(listOf())
     var loadError = mutableStateOf("")
-    var isLoading= mutableStateOf(false)
-    var endReached= mutableStateOf(false)
+    var isLoading = mutableStateOf(false)
+    var endReached = mutableStateOf(false)
 
     private var cachedPokemonList = listOf<PokedexListEntry>()
     private var isSearchStarting = true
     var isSearching = mutableStateOf(false)
 
-    init{
+    init {
         loadPokemonPaginated()
     }
 
-    fun searchPokemonList(query:String){
-        val listToSearch = if(isSearchStarting){
+    fun searchPokemonList(query: String) {
+        val listToSearch = if (isSearchStarting) {
             pokemonList.value
-        }
-        else
-        {
+        } else {
             cachedPokemonList
         }
 
         viewModelScope.launch(Dispatchers.Default) {
 
-            if(query.isEmpty()){
-                pokemonList.value =cachedPokemonList
+            if (query.isEmpty()) {
+                pokemonList.value = cachedPokemonList
                 isSearching.value = false
                 isSearchStarting = true
                 return@launch
             }
 
             val results = listToSearch.filter {
-                it.pokemonName.contains(query.trim(),ignoreCase = true) ||
-                   it.number.toString() == query.trim()
+                it.pokemonName.contains(query.trim(), ignoreCase = true) ||
+                        it.number.toString() == query.trim()
             }
 
-            if(isSearchStarting)
-            {
+            if (isSearchStarting) {
                 cachedPokemonList = pokemonList.value
                 isSearchStarting = false
             }
@@ -73,34 +70,32 @@ class PokemonListViewModel @Inject constructor(
         }
     }
 
-    fun loadPokemonPaginated(){
+    fun loadPokemonPaginated() {
 
         viewModelScope.launch {
-            isLoading.value=true
-            val result = repository.getPokemonList(PAGE_SIZE,offset = curPage * PAGE_SIZE)
+            isLoading.value = true
+            val result = repository.getPokemonList(PAGE_SIZE, offset = curPage * PAGE_SIZE)
 
-            when(result){
+            when (result) {
                 is Resource.Sucess -> {
                     endReached.value = curPage * PAGE_SIZE >= result.data!!.count
-                    val pokedexEntries = result.data.results.mapIndexed{ index, entry ->
-                        val number = if(entry.url.endsWith("/")){
+                    val pokedexEntries = result.data.results.mapIndexed { index, entry ->
+                        val number = if (entry.url.endsWith("/")) {
                             entry.url.dropLast(1).takeLastWhile { it.isDigit() }
-                        }
-                        else{
+                        } else {
                             entry.url.takeLastWhile { it.isDigit() }
                         }
 
-                        val url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${number}.png"
-                    PokedexListEntry(entry.name.replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(
-                            Locale.ROOT
-                        ) else it.toString()
-                    },url,number.toInt())
+                        val url =
+                            "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${number}.png"
+                        PokedexListEntry(entry.name.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.ROOT
+                            ) else it.toString()
+                        }, url, number.toInt())
                     }
 
                     curPage++
-
-
                     loadError.value = ""
                     isLoading.value = false
                     pokemonList.value += pokedexEntries
@@ -115,13 +110,12 @@ class PokemonListViewModel @Inject constructor(
         }
     }
 
-    fun calcDominantColor(drawable:Drawable, onFinish: (Color) -> Unit){
-        val bmp = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888,true)
-        Palette.from(bmp).generate{
-        palette->
-            palette?.dominantSwatch?.rgb?.let{ colorValue->
-            onFinish(Color(colorValue))
-         }
+    fun calcDominantColor(drawable: Drawable, onFinish: (Color) -> Unit) {
+        val bmp = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        Palette.from(bmp).generate { palette ->
+            palette?.dominantSwatch?.rgb?.let { colorValue ->
+                onFinish(Color(colorValue))
+            }
         }
     }
 
