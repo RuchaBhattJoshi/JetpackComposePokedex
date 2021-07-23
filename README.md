@@ -14,6 +14,7 @@ Also fetching data from the network. **created for learning purpose.
 - Lifecycle - dispose of observing data when lifecycle state changes.
 - ViewModel - UI related data holder, lifecycle aware.
 - MVVM Architecture (View - ViewModel - Model)
+- Pagging
 - [Retrofit2 & OkHttp3](https://github.com/square/retrofit) - construct the REST APIs and paging network data.
 - [Material-Components](https://github.com/material-components/material-components-android) - Material design components like ripple animation, cardView.
 - [Landscapist](https://github.com/skydoves/Landscapist) 
