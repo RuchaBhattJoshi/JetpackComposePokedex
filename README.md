@@ -31,5 +31,11 @@ Pokedex using the [PokeAPI](https://pokeapi.co/) for constructing RESTful API.<b
 PokeAPI provides a RESTful API interface to highly detailed objects built from thousands of lines of data related to Pokémon.
 
 
+
+<img width="319" alt="Screenshot 2021-10-09 at 23 54 02" src="https://user-images.githubusercontent.com/42872628/136675680-443a25b4-664a-4ac5-8b58-3cdedbc1671e.png">
+
+<img width="317" alt="Screenshot 2021-10-09 at 23 54 39" src="https://user-images.githubusercontent.com/42872628/136675682-e827338d-8575-4cb5-9691-e9430c12573e.png">
+
+
 ## MAD Score
 ![summary](https://user-images.githubusercontent.com/42872628/126574115-2b2a3526-b05b-4d99-8895-d3df41562ef8.png)
